@@ -10,16 +10,16 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
 
-    let itemArray = ["ttt","eee","ggg","nnn"]
-    
+    var itemArray = ["ttt","eee","ggg","nnn"]
+    let defaults = UserDefaults.standard
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let  items = defaults.array(forKey: "ToDoListArray") as? [String]
+      {
+        itemArray = items
+        }
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -68,4 +68,32 @@ class ToDoListViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
+   
+    @IBAction func addBtn(_ sender: UIBarButtonItem)
+    {
+        var textField = UITextField()
+        
+        let alert = UIAlertController(title: "Add items to ToDoList", message: "", preferredStyle: .alert)
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            
+        self.itemArray.append(textField.text!)
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
+            self.tableView.reloadData()
+        }
+        
+        alert.addTextField { (alertTextfield) in
+            alertTextfield.placeholder = "create new item"
+            textField = alertTextfield
+            print(alertTextfield.text!)
+        }
+        
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
 }
+
+
+
+
+
